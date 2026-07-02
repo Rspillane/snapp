@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Card } from "./card";
 import { fetchShuffledDeck } from "./api";
 
@@ -18,15 +18,23 @@ export const useDeck = () => {
   const [suitMatches, setSuitMatches] = useState(0);
   const [valueMatches, setValueMatches] = useState(0);
 
+  // Guards against a stale response clobbering state if loadDeck() is called
+  // again (e.g. React StrictMode's double-invoked mount effect, or a fast
+  // Retry click) before an earlier request has resolved.
+  const requestIdRef = useRef(0);
+
   const loadDeck = () => {
+    const requestId = ++requestIdRef.current;
     setLoading(true);
     setError(null);
     fetchShuffledDeck()
       .then(cards => {
+        if (requestIdRef.current !== requestId) return;
         setRemaining(cards);
         setLoading(false);
       })
       .catch(() => {
+        if (requestIdRef.current !== requestId) return;
         setError("Couldn't load the deck. Please try again.");
         setLoading(false);
       });

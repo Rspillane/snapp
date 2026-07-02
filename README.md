@@ -1,6 +1,6 @@
 # Snapp
 
-A Snap-style card game built with React Router, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a real 52-card deck.
+A Snap card game built with React and Vite, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a real 52-card deck.
 
 ## Getting Started
 

@@ -1,22 +1,14 @@
 import { useEffect, useRef } from "react";
-import type { Route } from "./+types/home";
 import { Deck } from "./components/Deck/Deck";
 import { DiscardPile } from "./components/DiscardPile/DiscardPile";
 import { RevealedCard } from "./components/RevealedCard/RevealedCard";
 import { useDeck } from "./game";
-import styles from "./home.module.css";
+import styles from "./App.module.css";
 
-export const meta = ({}: Route.MetaArgs) => {
-  return [
-    { title: "Snapp" },
-    { name: "description", content: "Snapp" },
-  ];
-};
-
-const Home = () => {
+export const App = () => {
   // Get game logic and state fro useDeck hook
   const { remaining, drawn, revealed, draw, loading, error, retry, suitMatches, valueMatches } = useDeck();
-  
+
   const topCard = drawn[drawn.length - 1];
   const drawButtonRef = useRef<HTMLButtonElement>(null);
   const isDrawDisabled = loading || remaining.length === 0 || revealed !== null;
@@ -81,7 +73,7 @@ const Home = () => {
         Chance of suit match: {suitChance.toFixed(1)}% |
         Chance of value match: {valueChance.toFixed(1)}%
       </p>
-     
+
       <div className={styles.row}>
         <DiscardPile cards={drawn} />
         <div style={{width: 120}} />
@@ -97,8 +89,8 @@ const Home = () => {
             )}
           </div>
         </div>
-        
-        
+
+
       </div>
           <button
             ref={drawButtonRef}
@@ -123,5 +115,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

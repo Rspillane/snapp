@@ -2,9 +2,7 @@
 .env
 /node_modules/
 
-# React Router
-/.react-router/
-/build/
+/dist/
 
 # Testing
 /test-results/
