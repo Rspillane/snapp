@@ -1,0 +1,48 @@
+.revealedCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 14rem;
+  width: 10rem;
+  perspective: 1000px;
+}
+
+.flipper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  animation: flip 0.6s ease forwards;
+}
+
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+}
+
+.front {
+  transform: rotateY(-180deg);
+}
+
+.image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+@keyframes flip {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
