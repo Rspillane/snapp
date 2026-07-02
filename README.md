@@ -1,18 +1,6 @@
-# Welcome to React Router!
+# Snapp
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+A Snap-style card game built with React Router, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a real 52-card deck.
 
 ## Getting Started
 
@@ -26,7 +14,7 @@ npm install
 
 ### Development
 
-Start the development server with HMR:
+Start the development server:
 
 ```bash
 npm run dev
@@ -34,54 +22,29 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
-## Building for Production
+## Testing
 
-Create a production build:
+This project has three layers of tests, under `tests/`:
 
-```bash
-npm run build
-```
+- **Unit** (`tests/unit`) — pure functions in isolation: `drawCard`, and `fetchShuffledDeck`'s error handling (via a mocked `fetch`).
+- **Integration** (`tests/integration`) — the `useDeck` hook (Vitest + React Testing Library), with a mocked `fetch` and fake timers, covering the draw → reveal → settle flow, suit/value match counting, and the error/retry path.
+- **End-to-end** (`tests/e2e`) — [Playwright](https://playwright.dev/), driving a real browser against the running app. The Deck of Cards API is intercepted via `page.route()`, so these tests are deterministic and don't depend on the third-party API being reachable.
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+One-time setup, after `npm install`:
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+npx playwright install chromium
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+Then, to run everything:
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+```bash
+# Unit + integration tests (Vitest)
+npm run test
 
-### DIY Deployment
+# Unit + integration tests, watch mode
+npm run test:watch
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
+# End-to-end tests (Playwright) — starts the dev server automatically
+npm run test:e2e
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Card } from "./card";
-import { fetchShuffledDeck } from "./deck";
+import { fetchShuffledDeck } from "./api";
 
 export const drawCard = (deck: Card[]): { card: Card; remaining: Card[] } => {
   const [card, ...remaining] = deck;
@@ -14,14 +14,26 @@ export const useDeck = () => {
   const [drawn, setDrawn] = useState<Card[]>([]);
   const [revealed, setRevealed] = useState<Card | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [suitMatches, setSuitMatches] = useState(0);
   const [valueMatches, setValueMatches] = useState(0);
 
+  const loadDeck = () => {
+    setLoading(true);
+    setError(null);
+    fetchShuffledDeck()
+      .then(cards => {
+        setRemaining(cards);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Couldn't load the deck. Please try again.");
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    fetchShuffledDeck().then(cards => {
-      setRemaining(cards);
-      setLoading(false);
-    });
+    loadDeck();
   }, []);
 
   const draw = () => {
@@ -48,5 +60,5 @@ export const useDeck = () => {
     return () => clearTimeout(timeout);
   }, [revealed, drawn]);
 
-  return { remaining, drawn, revealed, draw, loading, suitMatches, valueMatches };
+  return { remaining, drawn, revealed, draw, loading, error, retry: loadDeck, suitMatches, valueMatches };
 };

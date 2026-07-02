@@ -5,6 +5,7 @@
   height: 14rem;
   width: 10rem;
   perspective: 1000px;
+  z-index: 1;
 }
 
 .flipper {

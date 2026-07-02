@@ -15,11 +15,12 @@ export const meta = ({}: Route.MetaArgs) => {
 
 const Home = () => {
   // Get game logic and state fro useDeck hook
-  const { remaining, drawn, revealed, draw, loading, suitMatches, valueMatches } = useDeck();
+  const { remaining, drawn, revealed, draw, loading, error, retry, suitMatches, valueMatches } = useDeck();
   
   const topCard = drawn[drawn.length - 1];
   const drawButtonRef = useRef<HTMLButtonElement>(null);
   const isDrawDisabled = loading || remaining.length === 0 || revealed !== null;
+  const isGameOver = !loading && !error && drawn.length > 0 && remaining.length === 0 && revealed === null;
 
   // Focus the draw button when it becomes enabled
   useEffect(() => {
@@ -40,19 +41,33 @@ const Home = () => {
     ? `Drew ${revealed.value} of ${revealed.suit}. ${message ?? "No match."}`
     : "";
 
+  // While a card is mid-reveal it has already left `remaining`, but it hasn't
+  // settled into `drawn` yet either. Counting it back in here keeps the chance
+  // stable through the reveal, so it only updates once topCard actually changes.
+  const remainingForChance = revealed ? [...remaining, revealed] : remaining;
+
   const suitChance =
-    topCard && remaining.length > 0
-      ? (remaining.filter(card => card.suit === topCard.suit).length / remaining.length) * 100
+    topCard && remainingForChance.length > 0
+      ? (remainingForChance.filter(card => card.suit === topCard.suit).length / remainingForChance.length) * 100
       : 0;
-      
+
   const valueChance =
-    topCard && remaining.length > 0
-      ? (remaining.filter(card => card.value === topCard.value).length / remaining.length) * 100
+    topCard && remainingForChance.length > 0
+      ? (remainingForChance.filter(card => card.value === topCard.value).length / remainingForChance.length) * 100
       : 0;
 
   return (
     <div className={styles.page}>
+      {error && (
+        <div className={styles.errorBanner} role="alert">
+          <p>{error}</p>
+          <button type="button" className={styles.drawButton} onClick={retry}>
+            Retry
+          </button>
+        </div>
+      )}
        <p className={styles.message}>{message}</p>
+       {/* Visually hidden status message for screen readers */}
       <p className={styles.visuallyHidden} role="status" aria-live="polite">
         {announcement}
       </p>
@@ -94,6 +109,17 @@ const Home = () => {
           >
             Draw Card
           </button>
+
+{/* Restart Game Button */}
+          {isGameOver && (
+            <button
+              type="button"
+              className={styles.drawButton}
+              onClick={() => window.location.reload()}
+            >
+              Restart Game
+            </button>
+          )}
     </div>
   );
 };
