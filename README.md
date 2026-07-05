@@ -1,6 +1,6 @@
 # Snapp
 
-A Snap card game built with React and Vite, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a real 52-card deck.
+A Snap card game built with React and Vite, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a 52-card deck.
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ Start the development server:
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+The application will be available at `http://localhost:5173`.
 
 ## Testing
 
