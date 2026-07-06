@@ -2,6 +2,8 @@
 
 A Snap card game built with React and Vite, using the [Deck of Cards API](https://deckofcardsapi.com/) to shuffle and draw a 52-card deck.
 
+Deployed here via vercel -> https://snapp-orpin.vercel.app/
+
 ## Getting Started
 
 ### Installation
